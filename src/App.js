@@ -1,8 +1,53 @@
 import React, { useState, useEffect } from "react";
-import test_data from "./test_data.json"
+import test_data from "./test_data.json";
 
-// Phrases that trigger a search
 const questionTriggers = ["can you tell me", "have you worked", "what is"];
+
+const styles = {
+  container: {
+    padding: "20px",
+    fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+    maxWidth: "800px",
+    margin: "auto",
+    backgroundColor: "#f9f9f9",
+    boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
+    borderRadius: "8px",
+  },
+  button: {
+    backgroundColor: "#007BFF",
+    color: "white",
+    padding: "10px 20px",
+    border: "none",
+    borderRadius: "5px",
+    cursor: "pointer",
+    fontSize: "16px",
+    fontWeight: "bold",
+  },
+  buttonActive: {
+    backgroundColor: "red",
+  },
+  transcript: {
+    color: "#555",
+    fontStyle: "italic",
+  },
+  resultsList: {
+    listStyle: "none",
+    padding: "0",
+  },
+  listItem: {
+    margin: "10px 0",
+    padding: "10px",
+    backgroundColor: "#fff",
+    borderRadius: "5px",
+    boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+  },
+  question: {
+    color: "#007BFF",
+  },
+  answer: {
+    color: "#333",
+  },
+};
 
 function App() {
   const [isListening, setIsListening] = useState(false);
@@ -34,15 +79,13 @@ function App() {
       console.log("Transcript:", speechText);
       setTranscript(speechText);
 
-      // Check if the speech starts with any of the trigger phrases
       const matchingTrigger = questionTriggers.find((trigger) =>
         speechText.startsWith(trigger)
       );
 
       if (matchingTrigger) {
-        // Remove the trigger phrase from the speech and search the rest
         const query = speechText.replace(matchingTrigger, "").trim();
-        console.log("Extracted Query:", query); // Debugging
+        console.log("Extracted Query:", query);
         searchQuestion(query);
       } else {
         console.log("No question trigger detected.");
@@ -54,52 +97,59 @@ function App() {
     };
 
     recognition.onend = () => {
-      setIsListening(false); // Automatically stop listening after processing speech
+      setIsListening(false);
     };
 
     recognition.start();
   };
 
   const searchQuestion = (input) => {
-    console.log("Searching for:", input); // Debugging
-
-    const results = test_data.filter(
-      (item) =>
-        item.question.toLowerCase().includes(input) ||
-        item.answer.toLowerCase().includes(input)
+    console.log("Searching for:", input);
+    const exactResults = test_data.filter((item) =>
+      item.question.toLowerCase().includes(input)
     );
 
-    setSearchResults(results);
+    if (exactResults.length > 0) {
+      setSearchResults(exactResults);
+      console.log("Exact matches found:", exactResults);
+    } else {
+      console.log("No exact matches found. Searching by keywords...");
+      const keywords = input.split(" ").filter((word) => word.length > 2); // Split input into keywords (ignoring short words)
+      const keywordResults = test_data.filter((item) =>
+        keywords.some((keyword) => item.question.toLowerCase().includes(keyword))
+      );
 
-    if (results.length === 0) {
-      console.log("No matching results found."); // Debugging
+      setSearchResults(keywordResults);
+      console.log("Keyword matches found:", keywordResults);
     }
   };
 
   return (
-    <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
+    <div style={styles.container}>
       <h1>Interview Q&A Finder</h1>
       <button
         onClick={() => setIsListening(!isListening)}
         style={{
-          backgroundColor: isListening ? "red" : "#007BFF",
-          color: "white",
-          padding: "10px 20px",
-          border: "none",
-          borderRadius: "5px",
-          cursor: "pointer",
+          ...styles.button,
+          ...(isListening ? styles.buttonActive : {}),
         }}
       >
         {isListening ? "Stop Listening" : "Start Listening"}
       </button>
-      <p>Transcript: <strong>{transcript}</strong></p>
+      <p style={styles.transcript}>
+        Transcript: <strong>{transcript}</strong>
+      </p>
       <h2>Results</h2>
       {searchResults.length > 0 ? (
-        <ul>
+        <ul style={styles.resultsList}>
           {searchResults.map((item, index) => (
-            <li key={index}>
-              <strong>Q:</strong> {item.question} <br />
-              <strong>A:</strong> {item.answer}
+            <li key={index} style={styles.listItem}>
+              <p style={styles.question}>
+                <strong>Q:</strong> {item.question}
+              </p>
+              <p style={styles.answer}>
+                <strong>A:</strong> {item.answer}
+              </p>
             </li>
           ))}
         </ul>
