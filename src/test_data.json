@@ -1,0 +1,7 @@
+[
+    { "question": "What is React?", "answer": "React is a JavaScript library for building user interfaces." },
+    { "question": "What is Redux?", "answer": "Redux is a state management tool for JavaScript applications." },
+    { "question": "What is a hook in React?", "answer": "Hooks are functions that let you use state and other React features without writing a class." },
+    { "question": "How does useState work?", "answer": "useState is a Hook that allows you to add state to a functional component." },
+    { "question": "What is useEffect?", "answer": "useEffect is a Hook for managing side effects in functional components." }
+]
