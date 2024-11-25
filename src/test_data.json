@@ -2361,8 +2361,151 @@
   {
     "question": "can you tell me about worker processes in web servers?",
     "answer": "Worker processes are responsible for handling incoming requests and executing server tasks. Web servers like Apache and IIS use worker processes to isolate and manage workloads. For example, Apache can use a multi-threaded worker process model, and IIS assigns dedicated worker processes to application pools for better scalability and fault isolation."
-  }
+  },
 
-
+  {
+    "question": "What is the fetch API in JavaScript?",
+    "answer": "The fetch API provides a JavaScript interface for accessing and manipulating parts of the HTTP pipeline, such as requests and responses. It provides a global `fetch()` method that offers an easy, logical way to fetch resources asynchronously across the network. This API is promise-based, making it a more flexible and powerful way to make AJAX calls."
+},
+{
+    "question": "What is Axios and how is it used?",
+    "answer": "Axios is a promise-based HTTP client for the browser and node.js. It makes it easy to send asynchronous HTTP requests to REST endpoints and perform CRUD operations. It is often used to send multiple requests simultaneously. Axios is well known for its wide range of features including automatic JSON data transformation, client-side support for protecting against XSRF, and cancellation of requests."
+},
+{
+    "question": "What are the main differences between fetch and Axios?",
+    "answer": "The main differences are: 1) Syntax: Axios enjoys a simpler syntax and handles JSON data automatically, while fetch requires manual setup for similar tasks. 2) Error Handling: Axios rejects the promise only if the network fails, whereas fetch rejects only on network failures and does not throw for an HTTP error status even if the response is an HTTP 404 or 500. 3) Timeout Support: Axios supports request timeout by default unlike fetch. 4) Browser Support: Fetch is supported in more browsers natively than Axios, which requires a polyfill in older browsers."
+},
+{
+    "question": "How can you handle errors with Axios and fetch?",
+    "answer": "For Axios, errors can be caught using `.catch()` on the promise chain. It handles network errors and any error responses like 400 or 500 codes. For fetch, since it only rejects on network errors, handling HTTP errors requires checking the response's `ok` status within the `.then()` method and throwing an error if it is false, which can then be caught by a subsequent `.catch()`."
+},
+{
+    "question": "How do you cancel a request in Axios and in fetch?",
+    "answer": "In Axios, you can use a cancel token to cancel requests. You create a `CancelToken` source and pass it to the request configuration. To cancel, you call `cancel()` on the source. In fetch, cancelling a request is implemented using an `AbortController` which provides an `abort()` method to cancel the fetch."
+},
+{
+    "question": "Can you explain how to set headers in fetch and Axios?",
+    "answer": "In Axios, headers can be set by passing them as a part of the configuration object like `{ headers: { 'Content-Type': 'application/json' } }`. In fetch, headers can be included using the `Headers` object or by passing an object to the `headers` option in the fetch call like `fetch(url, { headers: { 'Content-Type': 'application/json' } })`."
+},
+{
+    "question": "What are interceptors in Axios?",
+    "answer": "Interceptors in Axios are functions that Axios calls for every request or response. They allow you to modify the request or response before they are handled by `then` or `catch`. You can use interceptors to inject tokens, log requests, or even alter data before it reaches or after it comes from the server."
+},
+{
+    "question": "How do you transform response data in Axios and fetch?",
+    "answer": "In Axios, you can use the `transformResponse` option to automatically modify the response data before it is passed on to then or catch. For fetch, you typically handle data transformation manually in the `.then()` method by applying JSON parsing like `.then(response => response.json())` to convert the response to JSON."
+},
+{
+    "question": "What is the role of promises in fetch and Axios?",
+    "answer": "Both Axios and fetch use JavaScript promises to handle asynchronous operations. They allow you to chain `.then()` methods to handle resolved promises (successful operations) and `.catch()` methods to handle rejected promises or errors, providing a cleaner, more robust way to handle asynchronous logic than traditional callback-based approaches."
+},
+{
+  "question": "What is Context API in React?",
+  "answer": "The Context API is a React structure that enables you to exchange unique details and assists in solving prop-drilling from all levels of your application. It is used for passing data through the component tree without having to pass props down manually at every level."
+},
+{
+  "question": "How do you create a context in React?",
+  "answer": "You can create a context using `React.createContext()` method. This returns a consumer and a provider. `Provider` is a component that as its name suggests provides the state to its children. It will hold the 'store' and be the parent of all the components that might need that store. `Consumer` as it so happens is a component that consumes and uses the state."
+},
+{
+  "question": "What is a Provider in React Context?",
+  "answer": "A Provider is a component that allows consuming components to subscribe to context changes. It accepts a `value` prop to be passed to consuming components that are descendants of this Provider. All consumers that are descendants of a Provider will re-render whenever the Provider’s `value` prop changes."
+},
+{
+  "question": "What is a Consumer in React Context?",
+  "answer": "A Consumer is a React component that subscribes to context changes. It requires a function as a child. The function receives the current context value and returns a React node. The value argument passed to the function will be equal to the value prop of the closest Provider for this context above in the tree."
+},
+{
+  "question": "How do you use the useContext hook in React?",
+  "answer": "The `useContext` hook is used to subscribe to React context without introducing nesting. Here's how you can use it:\n1. Import the context you want to use.\n2. Call `useContext` and pass the context as an argument.\n3. Use the context value in your component.\nExample:\n```javascript\nimport React, { useContext } from 'react';\nimport MyContext from './MyContext';\n\nfunction MyComponent() {\n  const value = useContext(MyContext);\n  return <div>{value}</div>;\n}\n```"
+},
+{
+  "question": "What are the common use cases for using Context?",
+  "answer": "Common use cases for the Context API include managing theming, localization, or managing user authentication state across an entire app. It's also useful for passing down user data, or internal app state accessible from various components."
+},
+{
+  "question": "What are the limitations of using Context API?",
+  "answer": "The Context API can cause unnecessary re-renders if not implemented correctly, because any change in the context value will cause all consumers of that context to re-render. It's also not optimized for high frequency updates like fine-grained state management (e.g., a frequently updating timer)."
+},
+{
+  "question": "How can you optimize performance issues related to Context API?",
+  "answer": "To optimize performance issues in Context API:\n1. Split contexts into multiple single-value contexts so only parts of an app that use the updated context values need to re-render.\n2. Use `React.memo` or `shouldComponentUpdate` to prevent unnecessary re-renders of components.\n3. Avoid changing the context value on each render unless necessary."
+},
+{
+  "question": "How does Context API differ from state management libraries like Redux or MobX?",
+  "answer": "Context API is mainly for passing data and allows React components to subscribe to context changes. It's simple and great for avoiding prop-drilling but it doesn't have built-in middlewares or tools to handle more complex state logic, asynchronous actions, or performance optimizations as Redux or MobX do."
+},
+{
+  "question": "What are the primary differences between Context API and Redux?",
+  "answer": "The primary differences are: Context API is built into React and is used for passing down data to deeply nested components without prop drilling. Redux is a state management library independent of React but often used with it to manage app-wide state in a more predictable way with a central store. Context API is simpler and more straightforward for smaller applications or specific areas within an app, whereas Redux provides robust tools and middleware support for managing larger, more complex application states, enabling features like undo/redo, state persistence, and more."
+},
+{
+  "question": "When should you use Context API over Redux?",
+  "answer": "Context API should be used when you want to manage state within a limited scope or pass down props to deeply nested components without introducing too much complexity. It is suitable for small to medium-sized applications where state management requirements are relatively simple. It avoids the boilerplate code associated with Redux, making it simpler and faster to implement for straightforward scenarios."
+},
+{
+  "question": "How does Redux enhance performance compared to Context API?",
+  "answer": "Redux enhances performance by minimizing unnecessary re-renders that can occur with Context API. Redux uses a single store and allows components to subscribe to only the parts of the data they need, reducing the chance of re-rendering components that do not depend on changed state. Additionally, Redux can be combined with middleware like Redux Thunk or Redux Saga to manage side-effects efficiently, which is something the Context API does not handle natively."
+},
+{
+  "question": "Can Context API replace Redux? What are the limitations?",
+  "answer": "Context API can replace Redux in scenarios where the complexity of state management is low and the app's size and scope are limited. However, Context API lacks the middleware support and dev tools that come with Redux, making it less suitable for complex scenarios involving high-frequency updates, asynchronous data handling, or when you need fine-grained control over performance optimizations. Context's main limitation is its potential to cause unnecessary re-renders across consuming components when the context value changes."
+},
+{
+  "question": "What is prop drilling and how do Context API and Redux solve it?",
+  "answer": "Prop drilling is a situation in React where data needs to be passed through multiple layers of components that do not need the data themselves, simply to reach a deeply nested component that does. Both Context API and Redux solve this problem by providing a way to access data directly from anywhere in the component tree. Context API does this by allowing data to be shared globally without intermediaries, while Redux keeps all state in a central store that any component can access by connecting to it, thus eliminating the need to pass props through intermediate components."
+},
+{
+  "question": "How do you handle asynchronous actions in Redux compared to Context API?",
+  "answer": "In Redux, asynchronous actions are typically handled by middleware like Redux Thunk or Redux Saga. These allow you to write action creators that return a function instead of an action. The middleware then takes care of executing these functions that can perform asynchronous API calls and dispatch actions based on the API response. Context API by itself does not provide a built-in way to handle asynchronous actions directly; you would typically manage async logic outside of the context and then pass the data back into context once it's ready."
+},
+{
+  "question": "What are some advanced use cases where Redux would be preferred over Context API?",
+  "answer": "Advanced use cases for Redux include situations involving complex state logic that requires time-travel debugging, state persistence, and integrating with other systems like local storage or web APIs. Redux's architecture allows for handling large-scale applications where multiple reducers manage different parts of the state, and actions are clearly defined and can be logged, replayed, or undone. It's also preferred when you need to handle complex synchronous and asynchronous logic that affects the state in multiple ways."
+},
+{
+  "question": "Can you use Redux and Context API together? Why might you want to?",
+  "answer": "Yes, Redux and Context API can be used together. This might be beneficial in large applications where you want to manage global state with Redux but also pass down UI-related context or themes using Context API without adding extra load to the Redux store. Using both allows for optimal division of state management concerns, leveraging Redux for complex business logic and Context API for more static or configuration-based data."
+},
+{
+  "question": "What is AWS S3 and what are its primary uses?",
+  "answer": "Amazon S3 (Simple Storage Service) is an object storage service that offers industry-leading scalability, data availability, security, and performance. This means customers of all sizes and industries can use it to store and protect any amount of data for a range of use cases, such as websites, mobile applications, backup and restore, archive, enterprise applications, IoT devices, and big data analytics."
+},
+{
+  "question": "How does Amazon EC2 work and what are its benefits?",
+  "answer": "Amazon EC2 (Elastic Compute Cloud) provides scalable computing capacity in the Amazon Web Services cloud. It reduces the time required to obtain and boot new server instances to minutes, allowing you to quickly scale capacity, both up and down, as your computing requirements change. Benefits include flexibility, control, cost-effectiveness, and reliability."
+},
+{
+  "question": "Can you explain the use of AWS Lambda and its benefits?",
+  "answer": "AWS Lambda is a serverless compute service that lets you run code without provisioning or managing servers. You pay only for the compute time you consume. Lambda can automatically run code in response to multiple events, such as HTTP requests through Amazon API Gateway, modifications to objects in Amazon S3 buckets, updates to an Amazon DynamoDB table, or state transitions in AWS Step Functions."
+},
+{
+  "question": "What is Amazon RDS and what databases does it support?",
+  "answer": "Amazon RDS (Relational Database Service) makes it easy to set up, operate, and scale a relational database in the cloud. It provides cost-efficient and resizable capacity while automating time-consuming administration tasks such as hardware provisioning, database setup, patching, and backups. It supports several database instance types including Amazon Aurora, PostgreSQL, MySQL, MariaDB, Oracle Database, and SQL Server."
+},
+{
+  "question": "Explain the purpose and benefits of Amazon CloudFront.",
+  "answer": "Amazon CloudFront is a fast content delivery network (CDN) service that securely delivers data, videos, applications, and APIs to customers globally with low latency, high transfer speeds, all within a developer-friendly environment. The service is used to distribute content to end users with high availability and high performance."
+},
+{
+  "question": "What are Amazon VPC and its main components?",
+  "answer": "Amazon VPC (Virtual Private Cloud) lets you provision a logically isolated section of the AWS Cloud where you can launch AWS resources in a virtual network that you define. The main components include subnets, internet gateways, route tables, network gateways, and security groups."
+},
+{
+  "question": "Describe the scalability features of Amazon DynamoDB.",
+  "answer": "Amazon DynamoDB is a NoSQL database service that supports key-value and document data structures. Its scalability features include automatic partitioning and re-partitioning of data as your table grows, and the ability to handle more than 10 trillion requests per day and support peaks of more than 20 million requests per second."
+},
+{
+  "question": "How do AWS IAM and security groups contribute to AWS security?",
+  "answer": "AWS IAM (Identity and Access Management) allows you to manage access to AWS services and resources securely. Using IAM, you can create and manage AWS users and groups, and use permissions to allow and deny their access to AWS resources. Security groups in a VPC specify the allowed inbound and outbound traffic to AWS resources, acting as a virtual firewall to control network access."
+},
+{
+  "question": "What is AWS Elastic Beanstalk and how does it simplify the deployment of applications?",
+  "answer": "AWS Elastic Beanstalk is an orchestration service offered by Amazon Web Services for deploying applications which automates the deployment, scaling, and management of application infrastructure. A user simply uploads their application, and Elastic Beanstalk automatically handles the details of capacity provisioning, load balancing, scaling, and monitoring."
+},
+{
+  "question": "What is the difference between Amazon S3 and EBS?",
+  "answer": "Amazon S3 is object storage built to store and retrieve any amount of data from anywhere, while Amazon EBS (Elastic Block Store) provides block level storage volumes for use with EC2 instances. EBS is designed for data that changes frequently and requires long-term persistence, whereas S3 is better suited for static content that requires retrieval over the Internet."
+}
 
 ]
