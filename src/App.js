@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import test_data from "./test_data.json";
 
-const questionTriggers = ["can you tell me", "have you worked", "what is"];
+const questionTriggers = ["can you tell me", "have you worked", "what is", "tell me"];
 
 const styles = {
   container: {
@@ -80,7 +80,7 @@ function App() {
       setTranscript(speechText);
 
       const matchingTrigger = questionTriggers.find((trigger) =>
-        speechText.startsWith(trigger)
+        speechText.includes(trigger)
       );
 
       if (matchingTrigger) {
@@ -88,7 +88,8 @@ function App() {
         console.log("Extracted Query:", query);
         searchQuestion(query);
       } else {
-        console.log("No question trigger detected.");
+        console.log("No question trigger detected. Searching entire text...");
+        searchQuestion(speechText);
       }
     };
 
@@ -105,24 +106,80 @@ function App() {
 
   const searchQuestion = (input) => {
     console.log("Searching for:", input);
+  
+    const normalizedInput = input.toLowerCase();
+  
+    // Exact phrase matching
     const exactResults = test_data.filter((item) =>
-      item.question.toLowerCase().includes(input)
+      item.question.toLowerCase().includes(normalizedInput)
     );
-
+  
     if (exactResults.length > 0) {
-      setSearchResults(exactResults);
-      console.log("Exact matches found:", exactResults);
-    } else {
-      console.log("No exact matches found. Searching by keywords...");
-      const keywords = input.split(" ").filter((word) => word.length > 2); // Split input into keywords (ignoring short words)
-      const keywordResults = test_data.filter((item) =>
-        keywords.some((keyword) => item.question.toLowerCase().includes(keyword))
-      );
-
-      setSearchResults(keywordResults);
-      console.log("Keyword matches found:", keywordResults);
+      const uniqueResults = filterUniqueAnswers(exactResults);
+      setSearchResults(uniqueResults);
+      console.log("Exact matches found:", uniqueResults);
+      return;
     }
+  
+    console.log("No exact matches found. Searching by keywords...");
+  
+    // Split input into keywords and filter out very short/common words
+    const keywords = normalizedInput
+      .split(" ")
+      .filter(
+        (word) =>
+          word.length > 2 &&
+          !["tell", "me", "about", "how", "can", "what", "is", "in"].includes(word)
+      );
+  
+    // Keyword-based matching with relevance threshold
+    const keywordResults = test_data.filter((item) => {
+      const questionWords = item.question.toLowerCase().split(" ");
+      const commonKeywords = keywords.filter((keyword) =>
+        questionWords.includes(keyword)
+      );
+      return commonKeywords.length / keywords.length >= 0.5; // At least 50% of keywords must match
+    });
+  
+    if (keywordResults.length > 0) {
+      const uniqueResults = filterUniqueAnswers(keywordResults);
+      setSearchResults(uniqueResults);
+      console.log("Keyword matches found:", uniqueResults);
+      return;
+    }
+  
+    console.log("No keyword matches found. Applying weighted fuzzy matching...");
+  
+    // Fuzzy matching with weighted scoring
+    const fuzzyResults = test_data
+      .map((item) => {
+        const questionWords = item.question.toLowerCase().split(" ");
+        const matchedKeywords = keywords.filter((keyword) =>
+          questionWords.some((word) => word.startsWith(keyword))
+        );
+        const score = matchedKeywords.length / keywords.length; // Calculate match score
+        return { item, score };
+      })
+      .filter(({ score }) => score >= 0.5) // Only include results with at least 50% match
+      .sort((a, b) => b.score - a.score) // Sort by highest relevance
+      .map(({ item }) => item);
+  
+    const uniqueResults = filterUniqueAnswers(fuzzyResults);
+    setSearchResults(uniqueResults);
+    console.log("Fuzzy matches found:", uniqueResults);
   };
+  
+  const filterUniqueAnswers = (results) => {
+    const seenAnswers = new Set();
+    return results.filter((result) => {
+      if (seenAnswers.has(result.answer)) {
+        return false;
+      }
+      seenAnswers.add(result.answer);
+      return true;
+    });
+  };
+  
 
   return (
     <div style={styles.container}>
